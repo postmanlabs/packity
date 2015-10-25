@@ -20,7 +20,7 @@ var _ = require('lodash'),
 
     defaultOptions = {
         path: '',
-        d: false
+        dev: false
     };
 
 module.exports = function (options, callback) {
@@ -77,7 +77,7 @@ module.exports = function (options, callback) {
                 package: package,
                 installed: modules,
                 // while caluclating status merge dependencies and dev dependencies if options are specified
-                status: _.mapValues(_.merge(package.dependencies, options.d && package.devDependencies), 
+                status: _.mapValues(_.merge(package.dependencies, options.dev && package.devDependencies), 
                     function (version, dependency) {
                         var ok = modules[dependency] ? semver.satisfies(modules[dependency].version, version) : null;
                         return {
