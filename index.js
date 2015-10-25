@@ -11,6 +11,13 @@ var _ = require('lodash'),
     PACKAGE_FILE_NAME = 'package.json',
     PACKAGE_NAME_KEY = 'name',
 
+    STATUS_MESSAGES = {
+        'true': 'match',
+        'false': 'mismatch',
+        'null': 'unavailable',
+        'undefined': 'unknown'
+    },
+
     defaultOptions = {
         path: '',
         d: false
@@ -72,7 +79,11 @@ module.exports = function (options, callback) {
                 // while caluclating status merge dependencies and dev dependencies if options are specified
                 status: _.mapValues(_.merge(package.dependencies, options.d && package.devDependencies), 
                     function (version, dependency) {
-                        return modules[dependency] ? semver.satisfies(modules[dependency].version, version) : null;
+                        var ok = modules[dependency] ? semver.satisfies(modules[dependency].version, version) : null;
+                        return {
+                            ok: ok,
+                            message: STATUS_MESSAGES[ok]
+                        };
                     })
             });
         }

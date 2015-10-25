@@ -32,10 +32,10 @@ describe('core local install', function () {
 	it('must result having status', function (done) {
 		require('../index')({ path: './' }, function (err, result) {
 			expect(result.status).to.be.eql({
-		        "async": true,
-		        "readdir": true,
-		        "lodash": true,
-		        "semver": true
+		        "async": { "ok": true, "message": "match" },
+		        "readdir": { "ok": true, "message": "match" },
+		        "lodash": { "ok": true, "message": "match" },
+		        "semver": { "ok": true, "message": "match" }
 		    });
 			done();
 		});
