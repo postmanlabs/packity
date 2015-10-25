@@ -1,0 +1,16 @@
+{
+  "name": "packity",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shamasis Bhattacharya <mail@shamasis.net>",
+  "license": "Apache-v2",
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "readdir": "0.0.13",
+    "semver": "^5.0.3"
+  }
+}
