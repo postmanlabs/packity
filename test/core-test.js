@@ -16,6 +16,8 @@ describe('core local install', function () {
 		        "version": "0.0.0",
 		        "dependencies": {
 		            "async": "^1.4.2",
+		            "colors": "^1.1.2",
+		            "commander": "^2.9.0",
 		            "readdir": "^0.0.13",
 		            "lodash": "^3.10.1",
 		            "semver": "^5.0.3"
@@ -35,6 +37,8 @@ describe('core local install', function () {
 		        "async": { "ok": true, "message": "match" },
 		        "readdir": { "ok": true, "message": "match" },
 		        "lodash": { "ok": true, "message": "match" },
+		        "commander": { "ok": true, "message": "match" },
+		        "colors": { "ok": true, "message": "match" },
 		        "semver": { "ok": true, "message": "match" }
 		    });
 			done();
