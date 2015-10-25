@@ -1,10 +1,10 @@
 {
   "name": "packity",
-  "version": "0.0.0",
+  "version": "0.0.0-beta.2",
   "description": "Sanity test for installed node modules of a package",
   "main": "index.js",
   "bin": {
-    "packity": "packity.js"
+    "packity": "bin/packity.js"
   },
   "dependencies": {
     "async": "^1.4.2",
