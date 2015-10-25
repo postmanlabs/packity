@@ -1,16 +1,40 @@
 {
   "name": "packity",
   "version": "0.0.0",
-  "description": "",
+  "description": "Sanity test for installed node modules of a package",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "bin": {
+    "packity": "packity.js"
   },
-  "author": "Shamasis Bhattacharya <mail@shamasis.net>",
-  "license": "Apache-v2",
   "dependencies": {
+    "async": "^1.4.2",
+    "readdir": "^0.0.13",
     "lodash": "^3.10.1",
-    "readdir": "0.0.13",
     "semver": "^5.0.3"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^2.3.3"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://shamasis@github.com/shamasis/packity.git"
+  },
+  "keywords": [
+    "npm",
+    "package",
+    "sanity"
+  ],
+  "author": "Shamasis Bhattacharya <mail@shamasis.net> (=)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/shamasis/packity/issues"
+  },
+  "homepage": "https://github.com/shamasis/packity#readme",
+  "directories": {
+    "test": "test"
   }
 }
