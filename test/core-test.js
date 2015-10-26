@@ -13,7 +13,7 @@ describe('core local install', function () {
 		require('../index')({ path: './' }, function (err, result) {
 			expect(result.package).to.be.eql({
 		        "name": "packity",
-		        "version": "0.0.0",
+		        "version": "0.0.0-beta.2",
 		        "dependencies": {
 		            "async": "^1.4.2",
 		            "colors": "^1.1.2",
@@ -32,15 +32,12 @@ describe('core local install', function () {
 	});
 
 	it('must result having status', function (done) {
-		require('../index')({ path: './' }, function (err, result) {
-			expect(result.status).to.be.eql({
-		        "async": { "ok": true, "message": "match" },
-		        "readdir": { "ok": true, "message": "match" },
-		        "lodash": { "ok": true, "message": "match" },
-		        "commander": { "ok": true, "message": "match" },
-		        "colors": { "ok": true, "message": "match" },
-		        "semver": { "ok": true, "message": "match" }
-		    });
+		require('../index')({ path: './', dev: true }, function (err, result) {
+			expect(Object.keys(result.status)).to.be.eql([ 'async', 'colors', 'commander', 'lodash', 'readdir',
+  				'semver', 'expect.js', 'mocha']);
+			Object.keys(result.status).forEach(function (dependency) {
+				expect(result.status[dependency].ok || (dependency + '.ok')).to.be(true);
+			});
 			done();
 		});
 	});
