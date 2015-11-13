@@ -1,6 +1,6 @@
 {
   "name": "packity",
-  "version": "0.0.0-beta.2",
+  "version": "0.0.0-beta.3",
   "description": "Sanity test for installed node modules of a package",
   "main": "index.js",
   "bin": {
