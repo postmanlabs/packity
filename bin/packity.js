@@ -19,7 +19,9 @@ program
     .description('Checks whether a node module has correct dependencies installed')
     .option('-d, --dev',  'check dev dependencies')
     .option('-q, --quiet',  'packity becomes less chatty')
-    .option('-s, --suppress', 'suppress exit code')
+    .option('-q, --quiet',  'packity becomes less chatty')
+    .option('-s, --summary',  'show end summary')
+    .option('-x, --exit-code', 'suppress exit code')
     .action(function(path, options) {
         options.path = path;
 
@@ -29,29 +31,31 @@ program
                 !options.quiet && log('err! %s'.red, err && err.message || err);
             }
 
-            var failure = false;
+            var failure = false,
+            	logPackages = !options.quiet && !options.summary;
 
             // banner
-            !options.quiet && log('%s v%s\n'.yellow, result.package.name, result.package.version);
+            !options.quiet && log('%s v%s'.yellow, result.package.name, result.package.version);
 
             Object.keys(result.status).forEach(function (name) {
                 var stat = result.status[name];
 
                 if (stat.ok) {
-                    !options.quiet && log(' ✓ %s (%s)'.dim, name, stat.message);
+                    logPackages && log('  ✓ '.green + '%s v%s (%s)', name, stat.installed, stat.message);
                 }
                 else {
-                    !options.quiet && log(' ✗ %s (%s)'.red, name, stat.message);
+                    !log.quiet && log('  ✗ %s%s (%s; required v%s)'.red, name, stat.installed ? 
+                    	(' v' + stat.installed) : '', stat.message, stat.required);
                 }
                 !stat.ok && (failure = true);
             });
 
             if (failure) {
-                !options.quiet && log('\nnot ok.'.red);
-                !options.suppress && process.exit(1);
+                !options.quiet && log('not ok.'.red.bold);
+                !options.exitCode && process.exit(1);
             }
             else {
-                !options.quiet && log('\nok!'.green);
+                !options.quiet && log('ok!'.green.bold);
             }
         });
     });
