@@ -29,19 +29,15 @@ var _ = require('lodash'),
     };
 
 module.exports = function (options, callback) {
+    // prepare options
+    options = _.defaults(options || {}, defaultOptions);
+
+    // do not allow if path is not provided
+    if (!options.path) {
+        return done(new Error('packity: invalid module path: "' + options.path + '"'));
+    }
+
     $.waterfall([
-        // prepare options
-        function (done) {
-            options = _.defaults(options || {}, defaultOptions);
-
-            // do not allow if path is not provided
-            if (!options.path) {
-                return done(new Error('packity: invalid module path: "' + options.path + '"'));
-            }
-
-            done();
-        },
-
         // fetch node module directories
         function (done) {
             fs.readdir(resolvepath(options.path, MODULE_FOLDER_NAME), function (err, dirs) {
@@ -71,13 +67,13 @@ module.exports = function (options, callback) {
 
         // load root package and return result to callback
         function (modules, done) {
-            done(null, _.pick(require(resolvepath(options.path, PACKAGE_FILE_NAME)), REQUIRED_PACKAGE_DATA), 
+            done(null, _.pick(require(resolvepath(options.path, PACKAGE_FILE_NAME)), REQUIRED_PACKAGE_DATA),
                 _.indexBy(modules, PACKAGE_NAME_KEY));
         },
 
         // prepare dependencies (normalise git versions)
         function (package, modules, done) {
-            done(null, _.mapValues(_.merge(package.dependencies, options.dev && package.devDependencies), 
+            done(null, _.mapValues(_.merge(package.dependencies, options.dev && package.devDependencies),
                 function (dependency) {
                     var search;
 
@@ -107,7 +103,7 @@ module.exports = function (options, callback) {
                         // 4 = installed un-matchable
                         // 8 = not installed
                         code = 0;
-                    
+
                     // if package is not installed then we have a failure else check if semver is valid
                     if (!installed[PACKAGE_NAME_KEY]) { // not installed
                         code = 8;
