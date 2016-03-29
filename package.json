@@ -1,15 +1,17 @@
 {
   "name": "packity",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Sanity test for installed node modules of a package",
   "main": "index.js",
   "bin": {
-    "packity": "packity.js"
+    "packity": "bin/packity.js"
   },
   "dependencies": {
     "async": "^1.4.2",
-    "readdir": "^0.0.13",
+    "colors": "^1.1.2",
+    "commander": "^2.9.0",
     "lodash": "^3.10.1",
+    "readdir": "^0.0.13",
     "semver": "^5.0.3"
   },
   "devDependencies": {
@@ -29,6 +31,10 @@
     "sanity"
   ],
   "author": "Shamasis Bhattacharya <mail@shamasis.net> (=)",
+  "contributors": [{
+    "name": "Akshay Bist",
+    "email": "elssar@altrawcode.com"
+  }],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/shamasis/packity/issues"
