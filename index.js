@@ -32,12 +32,19 @@ module.exports = function (options, callback) {
     // prepare options
     options = _.defaults(options || {}, defaultOptions);
 
-    // do not allow if path is not provided
-    if (!options.path) {
-        return done(new Error('packity: invalid module path: "' + options.path + '"'));
-    }
-
     $.waterfall([
+        // prepare options
+        function (done) {
+            options = _.defaults(options || {}, defaultOptions);
+
+            // do not allow if path is not provided
+            if (!options.path) {
+                return done(new Error('packity: invalid module path: "' + options.path + '"'));
+            }
+
+            done();
+        },
+
         // load root package file and return result to callback
         function (done) {
             done(null, _.pick(require(resolvepath(options.path, PACKAGE_FILE_NAME)), REQUIRED_PACKAGE_DATA));
