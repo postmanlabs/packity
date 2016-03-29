@@ -90,7 +90,7 @@ module.exports = function (options, callback) {
             done(null, {
                 package: package,
                 installed: modules,
-                // while caluclating status merge dependencies and dev dependencies if options are specified
+                // while calculating status merge dependencies and dev dependencies if options are specified
                 status: _.mapValues(dependencies, function (version, dependency) {
                     var installed = _.find(modules, function (module) { return module.name ===dependency }) || {},
                         // 0 = unknown
