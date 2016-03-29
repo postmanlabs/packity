@@ -31,6 +31,10 @@
     "sanity"
   ],
   "author": "Shamasis Bhattacharya <mail@shamasis.net> (=)",
+  "contributors": [{
+    "name": "Akshay Bist",
+    "email": "elssar@altrawcode.com"
+  }],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/shamasis/packity/issues"
