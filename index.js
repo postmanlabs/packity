@@ -38,41 +38,13 @@ module.exports = function (options, callback) {
     }
 
     $.waterfall([
-        // fetch node module directories
+        // load root package file and return result to callback
         function (done) {
-            fs.readdir(resolvepath(options.path, MODULE_FOLDER_NAME), function (err, dirs) {
-                // remove hidden directories
-                done(err, !err && _.filter(dirs, RegExp.prototype.test, HIDDEN_FILE_REGEX));
-            });
-        },
-
-        // transform the directories to paths of package.json
-        function (dirs, done) {
-            $.map(dirs, function (dir, next) {
-                next(null, resolvepath(options.path, MODULE_FOLDER_NAME, dir, PACKAGE_FILE_NAME));
-            }, done);
-        },
-
-        // reduce the package file paths to the ones that exist
-        function (files, done) {
-            $.filter(files, fs.exists, _.bind(done, this, null));
-        },
-
-        // get all package file data in each module directory
-        function (files, done) {
-            $.map(files, function (file, next) {
-                next(null, _.pick(require(file), REQUIRED_PACKAGE_DATA));
-            }, done);
-        },
-
-        // load root package and return result to callback
-        function (modules, done) {
-            done(null, _.pick(require(resolvepath(options.path, PACKAGE_FILE_NAME)), REQUIRED_PACKAGE_DATA),
-                _.indexBy(modules, PACKAGE_NAME_KEY));
+            done(null, _.pick(require(resolvepath(options.path, PACKAGE_FILE_NAME)), REQUIRED_PACKAGE_DATA));
         },
 
         // prepare dependencies (normalise git versions)
-        function (package, modules, done) {
+        function (package, done) {
             done(null, _.mapValues(_.merge(package.dependencies, options.dev && package.devDependencies),
                 function (dependency) {
                     var search;
@@ -81,11 +53,28 @@ module.exports = function (options, callback) {
                         search = dependency.match(GIT_URL_PREFIX);
                         // if semver is found extract it and drop the 'v' prefix
                         search && search[1] && (search = semver.valid(search[1].replace(/^v/, E)));
-                        console.log(dependency, search);
                         return search || null;
                     }
                     return dependency;
-                }), package, modules);
+                }), package);
+        },
+
+        // reduce the package file paths to the ones that exist
+        function (dependencies, package, done) {
+            var packageFiles = _.map(Object.keys(dependencies), function (dir) {
+                return resolvepath(options.path, MODULE_FOLDER_NAME, dir, PACKAGE_FILE_NAME);
+            });
+
+            $.filter(packageFiles, fs.exists, _.bind(done, this, null, dependencies, package));
+        },
+
+         // get all package file data in each module directory
+        function (dependencies, package, packageFiles, done) {
+            $.map(packageFiles, function (file, next) {
+                next(null, _.pick(require(file), REQUIRED_PACKAGE_DATA));
+            }, function (err, modules) {
+                return done(err, dependencies, package, modules);
+            });
         },
 
         // check status for dependencies and dev dependencies defined within package with respect to installed
@@ -96,7 +85,7 @@ module.exports = function (options, callback) {
                 installed: modules,
                 // while caluclating status merge dependencies and dev dependencies if options are specified
                 status: _.mapValues(dependencies, function (version, dependency) {
-                    var installed = modules[dependency] || {},
+                    var installed = _.find(modules, function (module) { return module.name ===dependency }) || {},
                         // 0 = unknown
                         // 1 = installed ok
                         // 2 = installed not ok
