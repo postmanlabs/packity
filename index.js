@@ -1,14 +1,16 @@
 var _ = require('lodash'),
-    $ = require('async'),
+    colors = require('colors/safe'),
+    async = require('async'),
     semver = require('semver'),
     fs = require('fs'),
+    format = require('util').format
     joinpath = require('path').join,
     resolvepath = require('path').resolve,
 
     E = '',
     HIDDEN_FILE_REGEX = /^[^\.]/,
     GIT_URL = /^git(\+(ssh|https?))?:\/\//i,
-    GIT_URL_PREFIX = /^[\s\S]+#([\s\S]+)$/,
+    GIT_URL_PREFIX = /^[\s\S]+#([\s\S]+)async/,
     REQUIRED_PACKAGE_DATA = ['name', 'version', 'dependencies', 'devDependencies'],
     MODULE_FOLDER_NAME = 'node_modules',
     PACKAGE_FILE_NAME = 'package.json',
@@ -26,13 +28,17 @@ var _ = require('lodash'),
     defaultOptions = {
         path: '',
         dev: false
+    },
+
+    log = function () {
+        process.stdout.write(format.apply(this, arguments) + '\n');
     };
 
 module.exports = function (options, callback) {
     // prepare options
     options = _.defaults(options || {}, defaultOptions);
 
-    $.waterfall([
+    async.waterfall([
         // prepare options
         function (done) {
             options = _.defaults(options || {}, defaultOptions);
@@ -72,12 +78,12 @@ module.exports = function (options, callback) {
                 return resolvepath(options.path, MODULE_FOLDER_NAME, dir, PACKAGE_FILE_NAME);
             });
 
-            $.filter(packageFiles, fs.exists, _.bind(done, this, null, dependencies, package));
+            async.filter(packageFiles, fs.exists, _.bind(done, this, null, dependencies, package));
         },
 
          // get all package file data in each module directory
         function (dependencies, package, packageFiles, done) {
-            $.map(packageFiles, function (file, next) {
+            async.map(packageFiles, function (file, next) {
                 next(null, _.pick(require(file), REQUIRED_PACKAGE_DATA));
             }, function (err, modules) {
                 return done(err, dependencies, package, modules);
@@ -122,4 +128,41 @@ module.exports = function (options, callback) {
             });
         }
     ], callback);
+};
+
+// add cli parser
+module.exports.cliReporter = function (options) {
+    return function (err, result) {
+        if (err) {
+            if (!options.supress) { throw err; }
+            !options.quiet && log(colors.red('err! %s'), err && err.message || err);
+        }
+
+        var failure = false,
+            logPackages = !options.quiet && !options.summary;
+
+        // banner
+        !options.quiet && log(colors.yellow('%s v%s'), result.package.name, result.package.version);
+
+        _.keys(result.status).forEach(function (name) {
+            var stat = result.status[name];
+
+            if (stat.ok) {
+                logPackages && log(colors.green('  ✓ ') + '%s v%s (%s)', name, stat.installed, stat.message);
+            }
+            else {
+                !log.quiet && log(colors.red('  ✗ %s%s (%s; required v%s)'), name, stat.installed ? 
+                    (' v' + stat.installed) : '', stat.message, stat.required);
+            }
+            !stat.ok && (failure = true);
+        });
+
+        if (failure) {
+            !options.quiet && log(colors.bold.red('not ok.'));
+            !options.exitCode && process.exit(1);
+        }
+        else {
+            !options.quiet && log(colors.bold.green('ok!'));
+        }
+    };
 };
