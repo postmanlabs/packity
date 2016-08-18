@@ -131,10 +131,17 @@ module.exports = function (options, callback) {
 };
 
 // add cli parser
-module.exports.cliReporter = function (options) {
+module.exports.cliReporter = function (options, callback) {
     return function (err, result) {
         if (err) {
-            if (!options.supress) { throw err; }
+            if (!options.supress) { 
+                if (callback) {
+                    return callback(err, result);
+                }
+                else {
+                    throw err; 
+                }
+            }
             !options.quiet && log(colors.red('err! %s'), err && err.message || err);
         }
 
@@ -159,10 +166,11 @@ module.exports.cliReporter = function (options) {
 
         if (failure) {
             !options.quiet && log(colors.bold.red('not ok.'));
-            !options.exitCode && process.exit(1);
+            callback ? callback(new Error('package check failed'), result) : (!options.exitCode && process.exit(1));
         }
         else {
             !options.quiet && log(colors.bold.green('ok!'));
+            callback(null, result);
         }
     };
 };
