@@ -170,7 +170,7 @@ module.exports.cliReporter = function (options, callback) {
         }
         else {
             !options.quiet && log(colors.bold.green('ok!'));
-            callback(null, result);
+            callback && callback(null, result);
         }
     };
 };
