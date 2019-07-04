@@ -12,14 +12,17 @@
     "commander": "^2.9.0",
     "lodash": "^4.17.2",
     "readdir": "^0.0.13",
-    "semver": "^5.0.3"
+    "semver": "^5.0.3",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
     "mocha": "^3.2.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -31,10 +34,12 @@
     "sanity"
   ],
   "author": "Shamasis Bhattacharya <mail@shamasis.net> (=)",
-  "contributors": [{
-    "name": "Akshay Bist",
-    "email": "elssar@altrawcode.com"
-  }],
+  "contributors": [
+    {
+      "name": "Akshay Bist",
+      "email": "elssar@altrawcode.com"
+    }
+  ],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/shamasis/packity/issues"
@@ -42,5 +47,6 @@
   "homepage": "https://github.com/shamasis/packity#readme",
   "directories": {
     "test": "test"
-  }
+  },
+  "snyk": true
 }
