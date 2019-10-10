@@ -78,7 +78,11 @@ module.exports = function (options, callback) {
                 return resolvepath(options.path, MODULE_FOLDER_NAME, dir, PACKAGE_FILE_NAME);
             });
 
-            async.filter(packageFiles, fs.exists, _.bind(done, this, null, dependencies, package));
+            async.filter(packageFiles, function (packageFile, cb) {
+              return fs.exists(packageFile, function (exists) { return cb(null, exists); })
+            }, function (err, results) {
+              return done(null, dependencies, package, results);
+            });
         },
 
          // get all package file data in each module directory
