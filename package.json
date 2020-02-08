@@ -11,7 +11,7 @@
     "colors": "^1.1.2",
     "commander": "^2.9.0",
     "lodash": "^4.17.2",
-    "readdir": "^0.0.13",
+    "readdir": "^1.0.1",
     "semver": "^5.0.3"
   },
   "devDependencies": {
