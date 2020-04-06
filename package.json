@@ -12,7 +12,7 @@
     "commander": "^2.9.0",
     "lodash": "^4.17.2",
     "readdir": "^0.0.13",
-    "semver": "^5.0.3"
+    "semver": "^7.2.0"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
