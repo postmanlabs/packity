@@ -13,7 +13,7 @@ describe('core local install', function () {
 		require('../index')({ path: './' }, function (err, result) {
 			expect(result.package).to.be.eql({
 		        "name": "packity",
-		        "version": "0.3.3",
+		        "version": "0.3.4",
 		        "dependencies": {
 							"async": "1.4.2",
 							"colors": "1.4.0",
