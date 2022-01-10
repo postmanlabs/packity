@@ -1,6 +1,6 @@
 {
   "name": "packity",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Sanity test for installed node modules of a package",
   "main": "index.js",
   "bin": {
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://shamasis@github.com/shamasis/packity.git"
+    "url": "git@github.com:postmanlabs/packity.git"
   },
   "keywords": [
     "npm",
@@ -31,15 +31,17 @@
     "sanity"
   ],
   "author": "Shamasis Bhattacharya <mail@shamasis.net> (=)",
-  "contributors": [{
-    "name": "Akshay Bist",
-    "email": "elssar@altrawcode.com"
-  }],
+  "contributors": [
+    {
+      "name": "Akshay Bist",
+      "email": "elssar@altrawcode.com"
+    }
+  ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/shamasis/packity/issues"
+    "url": "https://github.com/postmanlabs/packity/issues"
   },
-  "homepage": "https://github.com/shamasis/packity#readme",
+  "homepage": "https://github.com/postmanlabs/packity#README",
   "directories": {
     "test": "test"
   }
