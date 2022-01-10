@@ -15,7 +15,7 @@ describe('core local install', function () {
 		        "name": "packity",
 		        "version": "0.3.3",
 		        "dependencies": {
-							"async": "^2.1.4",
+							"async": "1.4.2",
 							"colors": "1.4.0",
 							"commander": "^2.9.0",
 							"lodash": "^4.17.2",
