@@ -57,8 +57,8 @@ module.exports = function (options, callback) {
         },
 
         // prepare dependencies (normalise git versions)
-        function (package, done) {
-            done(null, _.mapValues(_.merge(package.dependencies, options.dev && package.devDependencies),
+        function (packageJson, done) {
+            done(null, _.mapValues(_.merge(packageJson.dependencies, options.dev && packageJson.devDependencies),
                 function (dependency) {
                     var search;
 
@@ -69,32 +69,32 @@ module.exports = function (options, callback) {
                         return search || null;
                     }
                     return dependency;
-                }), package);
+                }), packageJson);
         },
 
         // reduce the package file paths to the ones that exist
-        function (dependencies, package, done) {
+        function (dependencies, packageJson, done) {
             var packageFiles = _.map(Object.keys(dependencies), function (dir) {
                 return resolvepath(options.path, MODULE_FOLDER_NAME, dir, PACKAGE_FILE_NAME);
             });
 
-            async.filter(packageFiles, fs.exists, _.bind(done, this, null, dependencies, package));
+            done(null, dependencies, packageJson, packageFiles.filter(fs.existsSync));
         },
 
          // get all package file data in each module directory
-        function (dependencies, package, packageFiles, done) {
+        function (dependencies, packageJson, packageFiles, done) {
             async.map(packageFiles, function (file, next) {
                 next(null, _.pick(require(file), REQUIRED_PACKAGE_DATA));
             }, function (err, modules) {
-                return done(err, dependencies, package, modules);
+                return done(err, dependencies, packageJson, modules);
             });
         },
 
         // check status for dependencies and dev dependencies defined within package with respect to installed
         // modules
-        function (dependencies, package, modules, done) {
+        function (dependencies, packageJson, modules, done) {
             done(null, {
-                package: package,
+                package: packageJson,
                 installed: modules,
                 // while calculating status merge dependencies and dev dependencies if options are specified
                 status: _.mapValues(dependencies, function (version, dependency) {
