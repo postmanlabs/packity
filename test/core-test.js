@@ -13,18 +13,18 @@ describe('core local install', function () {
 		require('../index')({ path: './' }, function (err, result) {
 			expect(result.package).to.be.eql({
 		        "name": "packity",
-		        "version": "0.3.2",
+		        "version": "0.3.4",
 		        "dependencies": {
-		            "async": "^1.4.2",
-		            "colors": "^1.1.2",
-		            "commander": "^2.9.0",
-		            "readdir": "^0.0.13",
-		            "lodash": "^3.10.1",
-		            "semver": "^5.0.3"
+							"async": "1.4.2",
+							"colors": "1.4.0",
+							"commander": "^2.9.0",
+							"lodash": "^4.17.2",
+							"readdir": "^0.0.13",
+							"semver": "^5.0.3"
 		        },
 		        "devDependencies": {
-		            "expect.js": "^0.3.1",
-		            "mocha": "^2.3.3"
+							"expect.js": "^0.3.1",
+							"mocha": "^3.2.0"
 		        }
 		    });
 			done();
